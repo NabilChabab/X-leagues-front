@@ -2,11 +2,9 @@ import { Component, OnInit } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { RouterModule, Router } from "@angular/router";
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AuthService } from '../../../core/services/auth.service';
+import { AuthService } from '../../../core/services/auth/auth.service';
 import { ButtonModule } from 'primeng/button';
 
-import { MessageService } from 'primeng/api';
-import { ToastModule } from "primeng/toast";
 
 @Component({
   selector: "app-login",

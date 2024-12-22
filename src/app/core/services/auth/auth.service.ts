@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
-import { API_BASE_URL } from '../../app.constants';
-import { NotificationService } from './errors/errors.service';
+import { API_BASE_URL } from '../../../app.constants';
+import { NotificationService } from '../errors/errors.service';
 
 @Injectable({
   providedIn: 'root',

@@ -4,10 +4,10 @@ import { AuthComponent } from './layouts/auth/auth.component';
 import { LoginComponent } from './pages/auth/login/login.component';
 import { RegisterComponent } from './pages/auth/register/register.component';
 import { AdminComponent } from './layouts/admin/admin.component';
-import { RoleGuard } from './core/guards/role.guard';
+import { RoleGuard } from './core/guards/roles/role.guard';
 import { UsersComponent } from './pages/dashboard/admin/users/users.component';
 import { CompetitionsComponent } from './pages/dashboard/member/competitions/competitions.component';
-import { AuthGuard } from './core/guards/auth.guard';
+import { AuthGuard } from './core/guards/auth/auth.guard';
 
 export const routes: Routes = [
   {
