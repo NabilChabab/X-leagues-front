@@ -23,7 +23,6 @@ export const routes: Routes = [
   {
     path: 'dashboard',
     component: AdminComponent,
-    canActivate: [AuthGuard],
     children: [
       { path: 'admin', component: UsersComponent, canActivate : [RoleGuard], data: { role: 'ADMIN' } },
       { path: 'member', component: CompetitionsComponent, canActivate : [RoleGuard] , data: { role: 'MEMBER' } },
