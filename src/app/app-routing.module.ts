@@ -8,11 +8,13 @@ import { RoleGuard } from './core/guards/roles/role.guard';
 import { UsersComponent } from './pages/dashboard/admin/users/users.component';
 import { CompetitionsComponent } from './pages/dashboard/member/competitions/competitions.component';
 import { AuthGuard } from './core/guards/auth/auth.guard';
+import { LandingComponent } from './layouts/landing/landing.component';
 
 export const routes: Routes = [
   {
     path: 'auth',
     component: AuthComponent,
+    canActivate: [AuthGuard],
     children: [
       { path: 'login', component: LoginComponent},
       { path: 'register', component: RegisterComponent},
@@ -27,8 +29,10 @@ export const routes: Routes = [
       { path: 'member', component: CompetitionsComponent, canActivate : [RoleGuard] , data: { role: 'MEMBER' } },
     ]
   },
-  { path: '', redirectTo: '/auth/login', pathMatch: 'full' },
-  { path: '**', redirectTo: '/auth/login' }
+  {
+    path: '',
+    component : LandingComponent
+  }
 ];
 
 @NgModule({

@@ -4,6 +4,9 @@ import { RouterModule, Router } from "@angular/router";
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from '../../../core/services/auth/auth.service';
 import { ButtonModule } from 'primeng/button';
+import { Observable } from "rxjs";
+import { UserState } from "../../../core/store/user/user.state";
+import { Store } from "@ngrx/store";
 
 
 @Component({
@@ -12,8 +15,8 @@ import { ButtonModule } from 'primeng/button';
   styleUrls: ["./login.component.css"],
   standalone: true,
   imports: [
-    CommonModule, 
-    RouterModule, 
+    CommonModule,
+    RouterModule,
     ReactiveFormsModule,
     ButtonModule,
   ],
@@ -21,33 +24,32 @@ import { ButtonModule } from 'primeng/button';
 export class LoginComponent implements OnInit {
   loginForm: FormGroup;
   errorMessages: { [key: string]: string } = {};
+  user$ : Observable<UserState>;
 
   constructor(
     private formBuilder: FormBuilder,
     private authService: AuthService,
     private router: Router,
+    private store : Store<{user : UserState}>
   ) {
     this.loginForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]]
     });
+    this.user$ = this.store.select('user');
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.user$.subscribe((user) => {
+      console.log('Current User State:', user);
+    });
+  }
 
   onLogin(): void {
     if (this.loginForm.valid) {
       this.authService.login(this.loginForm.value).subscribe({
         next: (response: any) => {
-            if (response.role === 'MEMBER') {
-              this.router.navigate(['/dashboard/member']);
-            } else if (response.role === 'ADMIN') {
-              this.router.navigate(['/dashboard/admin']);
-            } else if (response.role === 'JURY') {
-              this.router.navigate(['/dashboard/jury']);
-            } else {
-              this.errorMessages['global'] = 'Invalid role';
-            }
+            this.router.navigate(['/']);
         },
         error: (error) => {
           this.errorMessages = {};
