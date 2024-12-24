@@ -3,22 +3,30 @@ import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { API_BASE_URL } from '../../../app.constants';
 import { NotificationService } from '../errors/errors.service';
+import { Store } from '@ngrx/store';
+import { loginSuccess, logout } from '../../store/user/user.actions';
+import { UserState } from '../../store/user/user.state';
+import { StateStorage } from '../../store/user/user.effects';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private apiUrl = API_BASE_URL;
+  user$ : Observable<UserState>;
 
   constructor(
     private http: HttpClient,
+    private store : Store<{user : UserState}>,
     private notificationService: NotificationService,
-  ) {}
-
-  isAuthenticated(): boolean {
-    return !!this.getAccessToken();
+  ) {
+    this.user$ = this.store.select('user');
   }
 
+
+  isAuthenticated(): boolean {
+    return !!this.user$.forEach((user) => user.isAuthenticated);
+  }
   register(userData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/register`, userData).pipe(
       tap({
@@ -33,7 +41,13 @@ export class AuthService {
       tap({
         next: (response: any) => {
           this.saveTokens(response.access_token, response.refresh_token);
-          localStorage.setItem('role', response.role);
+          this.store.dispatch(
+            loginSuccess({
+              id : response.id,
+              username : response.username,
+              role : response.role,
+            })
+          )
           this.notificationService.showSuccess('Login Successful', `Welcome, ${response.role}!`);
         },
         error: () => {
@@ -43,8 +57,10 @@ export class AuthService {
     );
   }
 
-  getUserRole(): string | null {
-    return localStorage.getItem('role');
+
+  logout(): void {
+    this.clearTokens();
+    this.store.dispatch(logout());
   }
 
   saveTokens(accessToken: string, refreshToken: string): void {
