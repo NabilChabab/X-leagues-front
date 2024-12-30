@@ -36,6 +36,7 @@ export class IndexNavbarComponent implements OnInit {
       this.isAuthenticated = user.isAuthenticated;
       this.role = user.role;
     });
+    console.log(this.role);
     this.items = [
       {
         label: 'Options',
@@ -44,16 +45,17 @@ export class IndexNavbarComponent implements OnInit {
             label: 'dashboard',
             icon: 'pi pi-home',
             command: () => {
-              if (this.role === 'ADMIN') {
-                this.router.navigate(['/dashboard/admin']);
+              if (this.role === 'ROLE_ADMIN') {
+                this.router.navigate(['/admin/dashboard']);
               } else {
-                this.router.navigate(['/dashboard/member']);
+                this.router.navigate(['/member/dashboard']);
               }
             },
           },
           {
             label: 'profile',
             icon: 'pi pi-user',
+            command: () => this.router.navigate(['/profile']),
           },
           {
             label: 'settings',

@@ -6,27 +6,51 @@ import { NotificationService } from '../errors/errors.service';
 import { Store } from '@ngrx/store';
 import { loginSuccess, logout } from '../../store/user/user.actions';
 import { UserState } from '../../store/user/user.state';
-import { StateStorage } from '../../store/user/user.effects';
+import { jwtDecode } from 'jwt-decode';
+
+
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private apiUrl = API_BASE_URL;
-  user$ : Observable<UserState>;
+  user$: Observable<UserState>;
 
   constructor(
     private http: HttpClient,
-    private store : Store<{user : UserState}>,
+    private store: Store<{ user: UserState }>,
     private notificationService: NotificationService,
   ) {
     this.user$ = this.store.select('user');
+    this.checkAuthState();
   }
 
+  ngOnInit() {
+    this.checkAuthState();
+  }
+
+  private checkAuthState() {
+    const accessToken = this.getAccessToken();
+    if (accessToken) {
+      const decodedToken = this.decodeToken(accessToken);
+      if (decodedToken) {
+        this.store.dispatch(
+          loginSuccess({
+            id: decodedToken.id,
+            username: decodedToken.username,
+            role: decodedToken.role,
+          })
+        );
+
+      }
+    }
+  }
 
   isAuthenticated(): boolean {
     return !!this.user$.forEach((user) => user.isAuthenticated);
   }
+
   register(userData: any): Observable<any> {
     return this.http.post(`${this.apiUrl}/auth/register`, userData).pipe(
       tap({
@@ -41,14 +65,16 @@ export class AuthService {
       tap({
         next: (response: any) => {
           this.saveTokens(response.access_token, response.refresh_token);
+          const decodedToken = this.decodeToken(response.access_token);
           this.store.dispatch(
             loginSuccess({
-              id : response.id,
-              username : response.username,
-              role : response.role,
+              id: decodedToken.id,
+              username: decodedToken.username,
+              role: decodedToken.role,
             })
-          )
-          this.notificationService.showSuccess('Login Successful', `Welcome, ${response.role}!`);
+          );
+          localStorage.setItem('role', decodedToken.role);
+          this.notificationService.showSuccess('Login Successful', `Welcome, ${decodedToken.role}!`);
         },
         error: () => {
           this.notificationService.showError('Login Failed', 'Invalid email or password');
@@ -56,7 +82,6 @@ export class AuthService {
       }),
     );
   }
-
 
   logout(): void {
     this.clearTokens();
@@ -76,5 +101,14 @@ export class AuthService {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('role');
+  }
+
+  private decodeToken(token: string): any {
+    try {
+      return jwtDecode(token);
+    } catch (error) {
+      console.error('Invalid token', error);
+      return null;
+    }
   }
 }

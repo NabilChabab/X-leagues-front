@@ -3,7 +3,6 @@ import { RouterModule } from '@angular/router';
 import { ToastModule } from 'primeng/toast';
 import { UserState } from './core/store/user/user.state';
 import { Store } from '@ngrx/store';
-import { StateStorage } from './core/store/user/user.effects';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -15,8 +14,6 @@ export class AppComponent {
   title = 'x-leagues-front';
 
   constructor(private store: Store<{ user: UserState }>) {
-    this.store.select('user').subscribe((state) => {
-      StateStorage.saveUserState(state);
-    });
+    this.store.select('user');
   }
 }
