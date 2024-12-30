@@ -1,0 +1,20 @@
+<h2 class="font-semibold text-4xl text-white text-center"><span style="color: #7f1d1d">X-Leagues</span> - Latest Competitions</h2>
+<div class="container mx-auto" style="margin-top: 10%;">
+  <div class="justify-center flex flex-wrap">
+    <div class="w-full lg:w-12/12 px-4 -mt-24">
+      <div class="flex flex-wrap">
+        <div class="w-full lg:w-6/12 px-4" *ngFor="let competition of competitions">
+          <div class="hover:-mt-4 relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-lg ease-linear transition-all duration-150">
+            <h5 class="font-semibold text-center text-white absolute left-260-px mt-12">{{competition.location}}</h5>
+            <img
+            style="height: 300px;object-fit: cover;"
+              alt="..."
+              class="align-middle border-none max-w-full h-auto rounded-lg"
+              [src]="competition.imageUrl"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

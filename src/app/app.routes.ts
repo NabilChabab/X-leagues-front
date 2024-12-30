@@ -9,6 +9,9 @@ import { UsersComponent } from './pages/dashboard/admin/users/users.component';
 import { CompetitionsComponent } from './pages/dashboard/member/competitions/competitions.component';
 import { AuthGuard } from './core/guards/auth/auth.guard';
 import { LandingComponent } from './layouts/landing/landing.component';
+import { ProfileComponent } from './pages/profile/profile.component';
+import { IndexComponent } from './pages/landing/landing.component';
+import { StatisticsComponent } from './pages/dashboard/admin/statistics/statistics.component';
 
 export const routes: Routes = [
   {
@@ -21,16 +24,30 @@ export const routes: Routes = [
     ]
   },
   {
-    path: 'dashboard',
+    path: 'admin',
     component: AdminComponent,
     children: [
-      { path: 'admin', component: UsersComponent, canActivate : [RoleGuard], data: { role: 'ADMIN' } },
-      { path: 'member', component: CompetitionsComponent, canActivate : [RoleGuard] , data: { role: 'MEMBER' } },
+      { path: 'dashboard', component: StatisticsComponent, canActivate : [RoleGuard], data: { role: 'ROLE_ADMIN' } },
+      { path: 'users', component: UsersComponent, canActivate : [RoleGuard], data: { role: 'ROLE_ADMIN' } },
     ]
   },
   {
     path: '',
-    component : LandingComponent
+    component : LandingComponent,
+    children : [
+      {
+        path: '',
+        redirectTo: 'index',
+        pathMatch: 'full'
+      },
+      {
+        path: 'index',component : IndexComponent
+      },
+      {
+        path: 'profile',component : ProfileComponent , canActivate : [RoleGuard] , data: { role: ['ROLE_ADMIN', 'ROLE_MEMBER' , 'ROLE_JURY'] }
+      }
+    ]
+
   }
 ];
 
