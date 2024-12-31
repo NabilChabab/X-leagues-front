@@ -12,7 +12,7 @@ export class MembersService {
 
     constructor(private http : HttpClient) { }
 
-    findLatestCompetitions(page: number, size: number): Observable<any> {
+    findMembers(page: number, size: number): Observable<any> {
       return this.http.get(`${this.apiUrl}/users`, {
         withCredentials: true,
         params: { page: page.toString(), size: size.toString() }

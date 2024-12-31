@@ -13,9 +13,13 @@ export class LatestCompetitionsService {
   constructor(private http : HttpClient) { }
 
   findLatestCompetitions(page: number, size: number): Observable<any> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sort', 'date,desc');
     return this.http.get(`${this.apiUrl}/competition/all`, {
       withCredentials: true,
-      params: { page: page.toString(), size: size.toString() }
+      params: params
     });
   }
 }

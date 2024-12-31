@@ -144,6 +144,28 @@
 
         <li class="items-center">
           <a
+            [routerLink]="['/admin/competitions']"
+            class="text-xs  py-3 font-bold block"
+            routerLinkActive
+            #adminCompetitions="routerLinkActive"
+            [ngClass]="
+              adminCompetitions.isActive
+                ? 'text-red-600 hover:text-red-700'
+                : 'text-blueGray-300 hover:text-blueGray-500'
+            "
+          >
+            <i
+              class="fas fa-users mr-2 text-sm"
+              [ngClass]="
+                adminCompetitions.isActive ? 'opacity-75' : 'text-blueGray-300'
+              "
+            ></i>
+            Competitions
+          </a>
+        </li>
+
+        <li class="items-center">
+          <a
             [routerLink]="['/admin/maps']"
             class="text-xs  py-3 font-bold block"
             routerLinkActive
