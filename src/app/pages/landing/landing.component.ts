@@ -1,14 +1,14 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { CompetitionsComponent } from './competitions/competitions.component';
 
 @Component({
   selector: 'app-landing',
   standalone: true,
-  imports: [RouterModule , CommonModule],
+  imports: [RouterModule , CompetitionsComponent],
   templateUrl: './landing.component.html',
   styleUrl: './landing.component.css'
 })
-export class LandingComponent {
+export class IndexComponent {
 
 }
