@@ -6,12 +6,13 @@ import { RegisterComponent } from './pages/auth/register/register.component';
 import { AdminComponent } from './layouts/admin/admin.component';
 import { RoleGuard } from './core/guards/roles/role.guard';
 import { UsersComponent } from './pages/dashboard/admin/users/users.component';
-import { CompetitionsComponent } from './pages/dashboard/member/competitions/competitions.component';
 import { AuthGuard } from './core/guards/auth/auth.guard';
 import { LandingComponent } from './layouts/landing/landing.component';
 import { ProfileComponent } from './pages/profile/profile.component';
 import { IndexComponent } from './pages/landing/landing.component';
 import { StatisticsComponent } from './pages/dashboard/admin/statistics/statistics.component';
+import { AdminCompetitionsComponent } from './pages/dashboard/admin/competitions/competitions.component';
+import { MembersResolver } from './core/resolvers/members/members-resolver.service';
 
 export const routes: Routes = [
   {
@@ -28,7 +29,8 @@ export const routes: Routes = [
     component: AdminComponent,
     children: [
       { path: 'dashboard', component: StatisticsComponent, canActivate : [RoleGuard], data: { role: 'ROLE_ADMIN' } },
-      { path: 'users', component: UsersComponent, canActivate : [RoleGuard], data: { role: 'ROLE_ADMIN' } },
+      { path: 'users', component: UsersComponent, canActivate : [RoleGuard], data: { role: 'ROLE_ADMIN' } , resolve: { members: MembersResolver } },
+      { path: 'competitions', component: AdminCompetitionsComponent, canActivate : [RoleGuard], data: { role: 'ROLE_ADMIN' } },
     ]
   },
   {
